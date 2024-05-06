@@ -7,6 +7,7 @@ public class Merman : MonoBehaviour
 {
     [SerializeField] float movespeed;
     GameObject playerInstance;
+    [SerializeField] GameObject XP_Crystal;
     Rigidbody2D rb;
     private void Start()
     {
@@ -25,7 +26,14 @@ public class Merman : MonoBehaviour
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        SoundPlayer.GetInstance().PlayDeathAudio();
-        Destroy(gameObject);
+        if (collision.gameObject.CompareTag("Weapon"))
+        {
+            SoundPlayer.GetInstance().PlayDeathAudio();
+            GameObject instance = Instantiate(XP_Crystal, transform.position, Quaternion.identity);
+            XPCrystal crystalIns = instance.GetComponent<XPCrystal>();
+            Player player = playerInstance.GetComponent<Player>();
+            crystalIns.Attach(player);
+            Destroy(gameObject);
+        }
     }
 }

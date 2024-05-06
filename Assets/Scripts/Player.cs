@@ -1,6 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IObserver
 {
     [SerializeField] float movespeed;
     [SerializeField] GameObject scythePrefab;
@@ -9,10 +14,18 @@ public class Player : MonoBehaviour
     Rigidbody2D rb;
     Animator animator;
 
+    public Slider xpSlider;
+    public TMP_Text levelText;
+
+    private int currentXP = 0;
+    private int maxXp = 100;
+    private int currentLevel = 1;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        UpdateUI();
     }
 
     private void Update()
@@ -23,7 +36,7 @@ public class Player : MonoBehaviour
             //Spawn le scythe
             for (int i = 0; i < 3; i++)
             {
-                Quaternion rot = Quaternion.Euler(0, 0, Random.Range(0, 360f));
+                Quaternion rot = Quaternion.Euler(0, 0, UnityEngine.Random.Range(0, 360f));
 
                 //Instantiate(scythePrefab, transform.position, rot);
                 GameObject scythe = ObjectPool.GetInstance().GetPooledObject();
@@ -68,4 +81,48 @@ public class Player : MonoBehaviour
     }
 
     public int Foo2() => 5;
+
+    public void GainXP(int amount)
+    {
+        currentXP += amount;
+        UpdateUI();
+
+        if (currentXP >= maxXp)
+        {
+            LevelUp();
+        }
+    }
+    private void LevelUp()
+    {
+        currentLevel++;
+        currentXP = 0;
+        maxXp = CalculateMaxXPForNextLevel();
+        UpdateUI();
+    }
+    private int CalculateMaxXPForNextLevel()
+    {
+        return currentLevel * 100;
+    }
+    public void SetXP(float xpNormalized)
+    {
+        xpSlider.value = xpNormalized;
+    }
+
+    public void SetLevel(int level)
+    {
+        levelText.text = "Level: " + level.ToString();
+    }
+
+    private void UpdateUI()
+    {
+        SetXP((float)currentXP / maxXp);
+        SetLevel(currentLevel);
+    }
+
+    public void UpdateObserver(ISubject subject, int XP)
+    {
+        GainXP(XP);
+        UpdateUI();
+    }
 }
+
