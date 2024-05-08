@@ -1,7 +1,8 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemySpawner : MonoBehaviour
+public class RangedEnemySpawner : MonoBehaviour
 {
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] GameObject playerInstance;
@@ -11,7 +12,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] int Cooldown = 5;
     private void Start()
     {
-        
+
         StartCoroutine(SpawnEnemy());
     }
 
@@ -46,14 +47,14 @@ public class EnemySpawner : MonoBehaviour
                 arr[2] = Left;
                 arr[3] = Right;
 
-                int X = Random.Range(0,3);
+                int X = Random.Range(0, 3);
 
                 Vector3 p = Camera.ViewportToWorldPoint(arr[X]);
                 GameObject prefabTemp = Instantiate(enemyPrefab, new Vector3(p.x, p.y, 0f), Quaternion.identity);
-                Merman merman = prefabTemp.GetComponentInChildren<Merman>();
-                merman.SetDamage(merman.damage + (player.GetPlayerLevel()*1.2f));
-                merman.SetHP(merman.HP + (player.GetPlayerLevel()*2));
-                merman.SetPlayerInstance(playerInstance);
+                EnemyProjectile enemy = prefabTemp.GetComponentInChildren<EnemyProjectile>();
+                enemy.SetDamage(enemy.damage + (player.GetPlayerLevel() * 1.2f));
+                enemy.SetHP(enemy.HP + (player.GetPlayerLevel() * 2));
+                enemy.SetPlayerInstance(playerInstance);
             }
             yield return new WaitForSeconds(Cooldown);
         }

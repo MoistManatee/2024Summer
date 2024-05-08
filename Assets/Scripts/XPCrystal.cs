@@ -4,14 +4,28 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-public class XPCrystal : MonoBehaviour, ISubject
+public class XPCrystal : MonoBehaviour, ISubject, IPoolable
 {
     [SerializeField] Player PlayerRef;
+    float lifetime = 60f;
+
+    public void Reset()
+    {
+        lifetime = 60f;
+    }
+    void Update()
+    {
+        lifetime -= Time.deltaTime;
+        if (lifetime < 0)
+        {
+            gameObject.SetActive(false);
+        }
+    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Destroy(gameObject);
+            gameObject.SetActive(false);
             Notify();
         }
     }
@@ -53,21 +67,6 @@ public class XPCrystal : MonoBehaviour, ISubject
         {
             observer.UpdateObserver(this, XP_Value);
         }
-    }
-
-    // Usually, the subscription logic is only a fraction of what a Subject
-    // can really do. Subjects commonly hold some important business logic,
-    // that triggers a notification method whenever something important is
-    // about to happen (or after it).
-    public void SomeBusinessLogic()
-    {
-        Console.WriteLine("\nSubject: I'm doing something important.");
-        this.State = new System.Random().Next(0, 10);
-
-        Thread.Sleep(15);
-
-        Console.WriteLine("Subject: My state has just changed to: " + this.State);
-        this.Notify();
     }
 }
 

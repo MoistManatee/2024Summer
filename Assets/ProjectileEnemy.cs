@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class Merman : MonoBehaviour
+public class EnemyProjectile : MonoBehaviour
 {
     [SerializeField] float movespeed;
     GameObject playerInstance;
@@ -13,11 +13,35 @@ public class Merman : MonoBehaviour
 
     [SerializeField] public float damage = 20;
 
+    [SerializeField] float projTimer = 3;
+    [SerializeField] int projCount = 1;
+    [SerializeField] float projDamage = 30;
+    float currentProjTimer;
+
     Rigidbody2D rb;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         HP = maxHP;
+    }
+
+    private void Update()
+    {
+        currentProjTimer -= Time.deltaTime;
+        if (currentProjTimer <= 0)
+        {
+            for (int i = 0; i < projCount; i++)
+            {
+                GameObject ballObj = ObjectPool_EP.GetInstance().GetPooledObject();
+                EnemyBullet enemyBullet = ballObj.GetComponent<EnemyBullet>();
+                Vector2 vecToPlayer = Vector2.MoveTowards(transform.position, playerInstance.transform.position, 0f);
+                enemyBullet.SetVectorToPlayer(vecToPlayer);
+
+                ballObj.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
+                ballObj.SetActive(true);
+            }
+            currentProjTimer += projTimer;
+        }
     }
 
     public void SetPlayerInstance(GameObject prefab)

@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 5200604557268554418}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.07872894}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.000000037253, z: -0.07872894}
+  m_LocalScale: {x: 0.055742268, y: 0.055742268, z: 0.055742268}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 907242392700424608}
@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 129128268, guid: cccd4eac8f7177b40b3349cae4b5839d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2102d7b7b189c9d4a9a3382ecef01913, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -93,11 +93,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 907242392700424608}
-  - component: {fileID: 7279807016084654403}
   - component: {fileID: 7694055852875028732}
   - component: {fileID: 2982828114279052753}
+  - component: {fileID: -812310422296953813}
   m_Layer: 0
-  m_Name: Merman
+  m_Name: Boo 1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -112,30 +112,13 @@ Transform:
   m_GameObject: {fileID: 7372959611071729136}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3.46, y: -0.04, z: 0.07872894}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 3.46, y: -0.04, z: 0.20632}
+  m_LocalScale: {x: 4.027073, y: 4.027073, z: 4.027073}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4613645486963615505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7279807016084654403
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7372959611071729136}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f79c9a384db644a4f91b7f79d7709aaf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movespeed: 2
-  XP_Crystal: {fileID: 7268727769710105934, guid: 4a9d76413c31f9645b4670b1c00011bd, type: 3}
-  maxHP: 100
-  HP: 0
-  damage: 10
 --- !u!61 &7694055852875028732
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -168,7 +151,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.01990664, y: 0}
+  m_Offset: {x: -0.003102541, y: -0.00000010430813}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -179,7 +162,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3998921, y: 1}
+  m_Size: {x: 0.46968842, y: 0.46484026}
   m_EdgeRadius: 0
 --- !u!50 &2982828114279052753
 Rigidbody2D:
@@ -208,3 +191,24 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &-812310422296953813
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7372959611071729136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff69e1c07d0fcfc4fbd771f2ab89597f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  movespeed: 1.5
+  playerInstance: {fileID: 5098747125529951706, guid: f0f5aacae14a1564495d12a32532f9a1, type: 3}
+  XP_Crystal: {fileID: 7268727769710105934, guid: 4a9d76413c31f9645b4670b1c00011bd, type: 3}
+  maxHP: 300
+  HP: 0
+  damage: 80
+  projTimer: 5
+  projCount: 1
+  projDamage: 80

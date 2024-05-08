@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Json;
 using System.Threading;
 using TMPro;
 using UnityEngine;
@@ -7,22 +8,55 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour, IObserver
 {
+    [SerializeField] GameOver gameOverScreen;
     [SerializeField] float movespeed;
     [SerializeField] GameObject scythePrefab;
     [SerializeField] float scytheTimer = 2;
+    [SerializeField] int scytheCount = 3;
+    [SerializeField] float scytheDamage = 30;
     float currentScytheTimer;
     Rigidbody2D rb;
     Animator animator;
 
+    [SerializeField] float maxHP = 100;
+    [SerializeField] float HP;
+
     public Slider xpSlider;
+    public Slider hpSlider; 
     public TMP_Text levelText;
 
     private int currentXP = 0;
     private int maxXp = 100;
     private int currentLevel = 1;
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Merman enemy = collision.GetComponent<Merman>();
+            TakeDamage(enemy.damage);
+        }
+    }
+
+    void TakeDamage(float dmg)
+    {
+        HP -= dmg;
+        if (HP <= 0)
+        {
+            DeathEvent();
+        }
+        UpdateUI();
+    }
+
+    void DeathEvent()
+    {
+        gameObject.SetActive(false);
+        gameOverScreen.Setup();
+    }
+
     private void Start()
     {
+        HP = maxHP;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         UpdateUI();
@@ -34,14 +68,18 @@ public class Player : MonoBehaviour, IObserver
         if (currentScytheTimer <= 0)
         {
             //Spawn le scythe
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < scytheCount; i++)
             {
                 Quaternion rot = Quaternion.Euler(0, 0, UnityEngine.Random.Range(0, 360f));
 
-                //Instantiate(scythePrefab, transform.position, rot);
-                GameObject scythe = ObjectPool.GetInstance().GetPooledObject();
-                scythe.transform.SetPositionAndRotation(transform.position, rot);
-                scythe.SetActive(true);
+                GameObject scytheObj = ObjectPool.GetInstance().GetPooledObject();
+                //Scythe scythe = scytheObj.GetComponent<Scythe>();
+                //scythe.SetDamage(scytheDamage + (currentLevel*2));
+
+                scytheObj.transform.SetPositionAndRotation(transform.position, rot);
+                float newScale = currentLevel * 0.1f;
+                scytheObj.transform.localScale = (new Vector3(1f + newScale, 1f + newScale, 1f + newScale));
+                scytheObj.SetActive(true);
             }
             currentScytheTimer += scytheTimer;
         }
@@ -94,6 +132,16 @@ public class Player : MonoBehaviour, IObserver
     }
     private void LevelUp()
     {
+
+        if (scytheTimer >= 0)
+        {
+            scytheTimer = scytheTimer - (currentLevel * 0.01f);
+            if (scytheTimer < 0.8)
+            {
+                scytheTimer = 0.8f;
+            }
+        }
+        scytheCount += (int)Mathf.Round((currentLevel / 4));
         currentLevel++;
         currentXP = 0;
         maxXp = CalculateMaxXPForNextLevel();
@@ -108,6 +156,11 @@ public class Player : MonoBehaviour, IObserver
         xpSlider.value = xpNormalized;
     }
 
+    public void SetHP(float hpNormalized)
+    {
+        hpSlider.value = hpNormalized;
+    }
+
     public void SetLevel(int level)
     {
         levelText.text = "Level: " + level.ToString();
@@ -116,7 +169,13 @@ public class Player : MonoBehaviour, IObserver
     private void UpdateUI()
     {
         SetXP((float)currentXP / maxXp);
+        SetHP((float)HP / maxHP);
         SetLevel(currentLevel);
+    }
+
+    public int GetPlayerLevel()
+    {
+        return currentLevel;
     }
 
     public void UpdateObserver(ISubject subject, int XP)
