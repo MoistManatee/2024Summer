@@ -1,12 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization.Json;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Player : MonoBehaviour, IObserver
+public class Player : MonoBehaviour, ISubject
 {
     private static Player instance;
     public static Player GetInstance() => instance;
@@ -14,7 +11,13 @@ public class Player : MonoBehaviour, IObserver
     private static GameObject instanceObj;
     public static GameObject GetGameObjectInstance() => instanceObj;
 
-    [SerializeField] GameOver gameOverScreen;
+    [SerializeField] GameOver gameOverComponent;
+    [SerializeField] PlayerUI playerUIComponent;
+
+    [SerializeField] EnemySpawner enemySpawnerComponent1;
+    [SerializeField] EnemySpawner enemySpawnerComponent2;
+    [SerializeField] RangedEnemySpawner rangedEnemySpawnerComponent;
+
     [SerializeField] float movespeed;
     [SerializeField] GameObject scythePrefab;
     [SerializeField] float scytheTimer = 2;
@@ -24,20 +27,57 @@ public class Player : MonoBehaviour, IObserver
     Rigidbody2D rb;
     Animator animator;
 
-    [SerializeField] float maxHP = 100;
-    [SerializeField] float HP;
+    
 
     public Slider xpSlider;
     public Slider hpSlider; 
     public TMP_Text levelText;
 
-    private int currentXP = 0;
-    private int maxXp = 100;
-    private int currentLevel = 1;
+    [SerializeField] float maxHP = 100;
+    [SerializeField] float hp;
+    bool isDead = false;
+
+    int currentXP = 0;
+    int maxXp = 100;
+    int currentLevel = 1;
     private void Awake()
     {
         instance = this;
         instanceObj = gameObject;
+        Attach(gameOverComponent);
+        Attach(playerUIComponent);
+        Attach(enemySpawnerComponent1);
+        Attach(enemySpawnerComponent2);
+        Attach(rangedEnemySpawnerComponent);
+    }
+
+    [SerializeField] private List<IObserver> _observers = new List<IObserver>();
+
+    public float MaxHP { get => maxHP;}
+    public float HP { get => hp; }
+    public int CurrentXP { get => currentXP;}
+    public int MaxXp { get => maxXp;}
+    public int CurrentLevel { get => currentLevel;}
+    public bool IsDead { get => isDead;}
+
+    // The subscription management methods.
+    public void Attach(IObserver observer)
+    {
+        this._observers.Add(observer);
+    }
+
+    public void Detach(IObserver observer)
+    {
+        this._observers.Remove(observer);
+    }
+
+    // Trigger an update in each subscriber.
+    public void Notify()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.UpdateObserver(this);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -52,7 +92,7 @@ public class Player : MonoBehaviour, IObserver
             if (collision.GetComponent<Merman>())
             {
                 Merman enemy = collision.GetComponent<Merman>();
-                TakeDamage(enemy.damage);
+                TakeDamage(enemy.Damage);
             }
         }
         if (collision.gameObject.CompareTag("EnemyProjectile"))
@@ -64,26 +104,26 @@ public class Player : MonoBehaviour, IObserver
 
     void TakeDamage(float dmg)
     {
-        HP -= dmg;
-        if (HP <= 0)
+        hp -= dmg;
+        if (hp <= 0)
         {
             DeathEvent();
         }
-        UpdateUI();
+        Notify();
     }
 
     void DeathEvent()
     {
-        gameObject.SetActive(false);
-        gameOverScreen.Setup();
+        isDead = true;
+        Notify();
     }
 
     private void Start()
     {
-        HP = maxHP;
+        hp = MaxHP;
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-        UpdateUI();
+        Notify();
     }
 
     private void Update()
@@ -98,11 +138,11 @@ public class Player : MonoBehaviour, IObserver
 
                 GameObject scytheObj = ObjectPool_Scythe.GetInstance().GetPooledObject();
                 scytheObj.transform.SetPositionAndRotation(transform.position, rot);
-                float newScale = currentLevel * 0.1f;
+                float newScale = CurrentLevel * 0.1f;
                 scytheObj.transform.localScale = (new Vector3(1f + newScale, 1f + newScale, 1f + newScale));
 
                 Scythe scytheClass = scytheObj.GetComponent<Scythe>();
-                scytheClass.SetDamage(scytheDamage + (currentLevel * 2f));
+                scytheClass.SetDamage(scytheDamage + (CurrentLevel * 0.5f));
 
                 scytheObj.SetActive(true);
             }
@@ -137,18 +177,10 @@ public class Player : MonoBehaviour, IObserver
         }
     }
 
-
-    public int Foo()
-    {
-        return 5;
-    }
-
-    public int Foo2() => 5;
-
     public void GainXP(int amount)
     {
         currentXP += amount;
-        UpdateUI();
+        Notify();
 
         if (currentXP >= maxXp)
         {
@@ -169,43 +201,29 @@ public class Player : MonoBehaviour, IObserver
         currentLevel++;
         currentXP = 0;
         maxXp = CalculateMaxXPForNextLevel();
-        UpdateUI();
+        Notify();
     }
     private int CalculateMaxXPForNextLevel()
     {
         return currentLevel * 100;
     }
-    public void SetXP(float xpNormalized)
-    {
-        xpSlider.value = xpNormalized;
-    }
+}
 
-    public void SetHP(float hpNormalized)
-    {
-        hpSlider.value = hpNormalized;
-    }
 
-    public void SetLevel(int level)
-    {
-        levelText.text = "Level: " + level.ToString();
-    }
+public interface ISubject
+{
+    // Attach an observer to the subject.
+    void Attach(IObserver observer);
 
-    private void UpdateUI()
-    {
-        SetXP((float)currentXP / maxXp);
-        SetHP(HP / maxHP);
-        SetLevel(currentLevel);
-    }
+    // Detach an observer from the subject.
+    void Detach(IObserver observer);
 
-    public int GetPlayerLevel()
-    {
-        return currentLevel;
-    }
-
-    public void UpdateObserver(ISubject subject, int XP)
-    {
-        GainXP(XP);
-        UpdateUI();
-    }
+    // Notify all observers about an event.
+    void Notify();
+}
+public interface IObserver
+{
+    // Receive update from subject
+    void UpdateObserver(ISubject subject);
 }
 

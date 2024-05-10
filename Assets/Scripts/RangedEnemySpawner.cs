@@ -2,32 +2,50 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RangedEnemySpawner : MonoBehaviour
+public class RangedEnemySpawner : MonoBehaviour, ISubject, IObserver
 {
     [SerializeField] GameObject enemyPrefab;
 
     [SerializeField] Camera Camera;
     [SerializeField] int SpawnWaveSize = 5;
     [SerializeField] int Cooldown = 5;
+
+    [SerializeField] private List<IObserver> _observers = new List<IObserver>();
+
+    public void Attach(IObserver observer)
+    {
+        this._observers.Add(observer);
+    }
+
+    public void Detach(IObserver observer)
+    {
+        this._observers.Remove(observer);
+    }
+
+    // Trigger an update in each subscriber.
+    public void Notify()
+    {
+        foreach (var observer in _observers)
+        {
+            observer.UpdateObserver(this);
+        }
+    }
     private void Start()
     {
         StartCoroutine(SpawnEnemy());
     }
 
-    // Une coroutine est une méthode qui peut inclure des délais de temps
+    public void UpdateObserver(ISubject subject)
+    {
+        SpawnWaveSize = (Player.GetInstance().CurrentLevel * 2);
+    }
+
     public IEnumerator SpawnEnemy()
     {
-        /*
-        Vector3 BLeft = new Vector3(0f, 0f, 0f);
-        Vector3 BRight = new Vector3(1f, 0f, 0f);
-        Vector3 TLeft = new Vector3(0f, 1f, 0f);
-        Vector3 TRight = new Vector3(1f, 1f, 0f);
-        */
         Vector3[] arr = new Vector3[4];
 
         while (true)
         {
-            SpawnWaveSize += (Player.GetInstance().GetPlayerLevel() * 2);
             for (int i = 0; i < SpawnWaveSize; i++)
             {
                 float num = Random.Range(0f, 1f);
@@ -47,11 +65,9 @@ public class RangedEnemySpawner : MonoBehaviour
                 int X = Random.Range(0, 3);
 
                 Vector3 p = Camera.ViewportToWorldPoint(arr[X]);
-                GameObject prefabTemp = Instantiate(enemyPrefab, new Vector3(p.x, p.y, 0f), Quaternion.identity);
-                ProjectileEnemy enemy = prefabTemp.GetComponentInChildren<ProjectileEnemy>();
-                enemy.SetDamage(enemy.damage + (Player.GetInstance().GetPlayerLevel() * 1.2f));
-                enemy.SetHP(enemy.HP + (Player.GetInstance().GetPlayerLevel() * 2));
-                enemy.SetPlayerInstance(Player.GetGameObjectInstance());
+                GameObject spawnedEnemy = Instantiate(enemyPrefab, new Vector3(p.x, p.y, 0f), Quaternion.identity);
+                Attach(spawnedEnemy.GetComponent<ProjectileEnemy>());
+                Notify();
             }
             yield return new WaitForSeconds(Cooldown);
         }

@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class ProjectileEnemy : MonoBehaviour
+public class ProjectileEnemy : MonoBehaviour, IObserver
 {
     [SerializeField] float movespeed;
-    GameObject playerInstance;
+    [SerializeField] float movespeedMulti = 1;
     [SerializeField] GameObject XP_Crystal;
     [SerializeField] float maxHP = 100;
     [SerializeField] public float HP;
@@ -36,7 +36,7 @@ public class ProjectileEnemy : MonoBehaviour
             {
                 GameObject ballObj = ObjectPool_EP.GetInstance().GetPooledObject();
                 EnemyBullet enemyBullet = ballObj.GetComponent<EnemyBullet>();
-                Vector2 vecToPlayer = playerInstance.transform.position - transform.position;
+                Vector2 vecToPlayer = Player.GetGameObjectInstance().transform.position - transform.position;
                 enemyBullet.SetVectorToPlayer(vecToPlayer.normalized);
 
                 ballObj.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
@@ -46,18 +46,13 @@ public class ProjectileEnemy : MonoBehaviour
         }
     }
 
-    public void SetPlayerInstance(GameObject prefab)
-    {
-        playerInstance = prefab;
-    }
-
     void FixedUpdate()
     {
-        Vector2 vector = Vector2.MoveTowards(transform.position, playerInstance.transform.position, movespeed * Time.deltaTime);
+        Vector2 vector = Vector2.MoveTowards(transform.position, Player.GetGameObjectInstance().transform.position, (movespeed + movespeedMulti) * Time.deltaTime);
         rb.position = new Vector2(vector.x, vector.y);
     }
 
-    public void SetDamage(float dmg)
+    void SetDamage(float dmg)
     {
         damage = dmg;
     }
@@ -70,8 +65,12 @@ public class ProjectileEnemy : MonoBehaviour
             DeathEvent();
         }
     }
+    void SetSpeed(float speedMulti)
+    {
+        movespeedMulti = speedMulti;
+    }
 
-    public void SetHP(float newHP)
+    void SetHP(float newHP)
     {
         maxHP = newHP;
         HP = newHP;
@@ -83,9 +82,6 @@ public class ProjectileEnemy : MonoBehaviour
         GameObject crystalObj = ObjectPool_Crystal.GetInstance().GetPooledObject();
         crystalObj.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
         crystalObj.SetActive(true);
-        XPCrystal crystalIns = crystalObj.GetComponent<XPCrystal>();
-        Player player = playerInstance.GetComponent<Player>();
-        crystalIns.Attach(player);
 
         Destroy(gameObject);
     }
@@ -97,5 +93,11 @@ public class ProjectileEnemy : MonoBehaviour
             Scythe weapon = collision.GetComponent<Scythe>();
             TakeDamage(weapon.damage);
         }
+    }
+    public void UpdateObserver(ISubject subject)
+    {
+        SetDamage(damage + (Player.GetInstance().CurrentLevel * 1.2f));
+        SetHP(HP + (Player.GetInstance().CurrentLevel * 2));
+        SetSpeed(Player.GetInstance().CurrentLevel * 0.2f);
     }
 }
