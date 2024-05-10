@@ -128,6 +128,9 @@ public class Player : MonoBehaviour, ISubject
 
     private void Update()
     {
+        
+
+
         currentScytheTimer -= Time.deltaTime;
         if (currentScytheTimer <= 0)
         {
