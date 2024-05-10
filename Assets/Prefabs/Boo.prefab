@@ -133,7 +133,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movespeed: 3
   XP_Crystal: {fileID: 7268727769710105934, guid: 4a9d76413c31f9645b4670b1c00011bd, type: 3}
-  maxHP: 100
+  maxHP: 20
   HP: 0
   damage: 5
 --- !u!61 &7694055852875028732

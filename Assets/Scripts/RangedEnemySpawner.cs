@@ -5,14 +5,12 @@ using UnityEngine;
 public class RangedEnemySpawner : MonoBehaviour
 {
     [SerializeField] GameObject enemyPrefab;
-    [SerializeField] GameObject playerInstance;
 
     [SerializeField] Camera Camera;
     [SerializeField] int SpawnWaveSize = 5;
     [SerializeField] int Cooldown = 5;
     private void Start()
     {
-
         StartCoroutine(SpawnEnemy());
     }
 
@@ -29,8 +27,7 @@ public class RangedEnemySpawner : MonoBehaviour
 
         while (true)
         {
-            Player player = playerInstance.GetComponent<Player>();
-            SpawnWaveSize += (player.GetPlayerLevel() * 2);
+            SpawnWaveSize += (Player.GetInstance().GetPlayerLevel() * 2);
             for (int i = 0; i < SpawnWaveSize; i++)
             {
                 float num = Random.Range(0f, 1f);
@@ -51,10 +48,10 @@ public class RangedEnemySpawner : MonoBehaviour
 
                 Vector3 p = Camera.ViewportToWorldPoint(arr[X]);
                 GameObject prefabTemp = Instantiate(enemyPrefab, new Vector3(p.x, p.y, 0f), Quaternion.identity);
-                EnemyProjectile enemy = prefabTemp.GetComponentInChildren<EnemyProjectile>();
-                enemy.SetDamage(enemy.damage + (player.GetPlayerLevel() * 1.2f));
-                enemy.SetHP(enemy.HP + (player.GetPlayerLevel() * 2));
-                enemy.SetPlayerInstance(playerInstance);
+                ProjectileEnemy enemy = prefabTemp.GetComponentInChildren<ProjectileEnemy>();
+                enemy.SetDamage(enemy.damage + (Player.GetInstance().GetPlayerLevel() * 1.2f));
+                enemy.SetHP(enemy.HP + (Player.GetInstance().GetPlayerLevel() * 2));
+                enemy.SetPlayerInstance(Player.GetGameObjectInstance());
             }
             yield return new WaitForSeconds(Cooldown);
         }

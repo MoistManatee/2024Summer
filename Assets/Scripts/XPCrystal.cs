@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class XPCrystal : MonoBehaviour, ISubject, IPoolable
 {
-    [SerializeField] Player PlayerRef;
     float lifetime = 60f;
 
     public void Reset()
@@ -32,7 +31,7 @@ public class XPCrystal : MonoBehaviour, ISubject, IPoolable
     // Start is called before the first frame update
     void Start()
     {
-        //Attach(PlayerRef);
+        Attach(Player.GetInstance());
     }
 
     // For the sake of simplicity, the Subject's state, essential to all
@@ -84,5 +83,5 @@ public interface ISubject
 public interface IObserver
 {
     // Receive update from subject
-    void UpdateObserver(ISubject subject, int XP);
+    void UpdateObserver(ISubject subject, int num);
 }

@@ -2100,11 +2100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2060c08db0b4325499b02e02d66746a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1738535800 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5098747125529951706, guid: f0f5aacae14a1564495d12a32532f9a1, type: 3}
-  m_PrefabInstance: {fileID: 9147369961362628744}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1738535806 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7000087670423105385, guid: f0f5aacae14a1564495d12a32532f9a1, type: 3}
@@ -2233,7 +2228,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 7372959611071729136, guid: 23db02171a57f634fb9314f48a61b375, type: 3}
-  playerInstance: {fileID: 1738535800}
   Camera: {fileID: 519420031}
   SpawnWaveSize: 2
   Cooldown: 15
@@ -2250,7 +2244,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 7372959611071729136, guid: 4559f145abf6aeb4c90a9766847b0f44, type: 3}
-  playerInstance: {fileID: 1738535800}
   Camera: {fileID: 519420031}
   SpawnWaveSize: 1
   Cooldown: 60
@@ -2267,7 +2260,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 7372959611071729136, guid: 66153518b5c71f6478846f71890b7b8c, type: 3}
-  playerInstance: {fileID: 1738535800}
   Camera: {fileID: 519420031}
   SpawnWaveSize: 1
   Cooldown: 300

@@ -6,12 +6,11 @@ public class EnemyBullet : MonoBehaviour, IPoolable
 {
     float lifetime = 5f;
     [SerializeField] public float damage = 80;
-    GameObject playerRef;
-    Vector2 vector;
+    Vector3 direction;
 
     public void SetVectorToPlayer(Vector2 PlayerVector)
     {
-        vector = PlayerVector;
+        direction = PlayerVector;
     }
 
 
@@ -32,6 +31,6 @@ public class EnemyBullet : MonoBehaviour, IPoolable
         {
             gameObject.SetActive(false);
         }
-        transform.position += new Vector3(vector.x, vector.y, 0f) * 2f * Time.deltaTime;
+        transform.position += direction * 2f * Time.deltaTime;
     }
 }

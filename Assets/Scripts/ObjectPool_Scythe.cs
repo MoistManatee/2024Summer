@@ -6,16 +6,16 @@ public interface IPoolable
     void Reset();
 }
 
-public class ObjectPool : MonoBehaviour
+public class ObjectPool_Scythe : MonoBehaviour
 {
     [SerializeField] GameObject objectToPool;
     [SerializeField] int poolCount = 100;
 
     List<GameObject> pooledObjects = new();
 
-    private static ObjectPool instance;
+    private static ObjectPool_Scythe instance;
 
-    public static ObjectPool GetInstance() => instance;
+    public static ObjectPool_Scythe GetInstance() => instance;
     int poolIndex;
 
     private void Awake()

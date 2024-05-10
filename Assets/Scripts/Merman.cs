@@ -6,7 +6,6 @@ using static UnityEngine.GraphicsBuffer;
 public class Merman : MonoBehaviour
 {
     [SerializeField] float movespeed;
-    GameObject playerInstance;
     [SerializeField] GameObject XP_Crystal;
     [SerializeField] float maxHP = 100;
     [SerializeField] public float HP;
@@ -14,20 +13,18 @@ public class Merman : MonoBehaviour
     [SerializeField] public float damage = 20;
 
     Rigidbody2D rb;
+    private void Awake()
+    {
+        HP = maxHP;
+    }
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        HP = maxHP;
-    }
-
-    public void SetPlayerInstance(GameObject prefab)
-    {
-        playerInstance = prefab;
     }
 
     void FixedUpdate()
     {
-        Vector2 vector = Vector2.MoveTowards(transform.position, playerInstance.transform.position, movespeed * Time.deltaTime);
+        Vector2 vector = Vector2.MoveTowards(transform.position, Player.GetGameObjectInstance().transform.position, movespeed * Time.deltaTime);
         rb.position = new Vector2(vector.x, vector.y);
     }
 
@@ -57,9 +54,9 @@ public class Merman : MonoBehaviour
         GameObject crystalObj = ObjectPool_Crystal.GetInstance().GetPooledObject();
         crystalObj.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
         crystalObj.SetActive(true);
-        XPCrystal crystalIns = crystalObj.GetComponent<XPCrystal>();
-        Player player = playerInstance.GetComponent<Player>();
-        crystalIns.Attach(player);
+        //XPCrystal crystalIns = crystalObj.GetComponent<XPCrystal>();
+        //Player player = playerInstance.GetComponent<Player>();
+        //crystalIns.Attach(player);
 
         Destroy(gameObject);
     }

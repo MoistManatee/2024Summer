@@ -4,7 +4,6 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] GameObject enemyPrefab;
-    [SerializeField] GameObject playerInstance;
 
     [SerializeField] Camera Camera;
     [SerializeField] int SpawnWaveSize = 5;
@@ -28,8 +27,7 @@ public class EnemySpawner : MonoBehaviour
 
         while (true)
         {
-            Player player = playerInstance.GetComponent<Player>();
-            SpawnWaveSize += (player.GetPlayerLevel() * 2);
+            SpawnWaveSize += (Player.GetInstance().GetPlayerLevel() * 2);
             for (int i = 0; i < SpawnWaveSize; i++)
             {
                 float num = Random.Range(0f, 1f);
@@ -51,9 +49,8 @@ public class EnemySpawner : MonoBehaviour
                 Vector3 p = Camera.ViewportToWorldPoint(arr[X]);
                 GameObject prefabTemp = Instantiate(enemyPrefab, new Vector3(p.x, p.y, 0f), Quaternion.identity);
                 Merman merman = prefabTemp.GetComponentInChildren<Merman>();
-                merman.SetDamage(merman.damage + (player.GetPlayerLevel()*1.2f));
-                merman.SetHP(merman.HP + (player.GetPlayerLevel()*2));
-                merman.SetPlayerInstance(playerInstance);
+                merman.SetDamage(merman.damage + (Player.GetInstance().GetPlayerLevel()*1.2f));
+                merman.SetHP(merman.HP + (Player.GetInstance().GetPlayerLevel()*2));
             }
             yield return new WaitForSeconds(Cooldown);
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GraphicsBuffer;
 
-public class EnemyProjectile : MonoBehaviour
+public class ProjectileEnemy : MonoBehaviour
 {
     [SerializeField] float movespeed;
     GameObject playerInstance;
@@ -15,14 +15,17 @@ public class EnemyProjectile : MonoBehaviour
 
     [SerializeField] float projTimer = 3;
     [SerializeField] int projCount = 1;
-    [SerializeField] float projDamage = 30;
+    //[SerializeField] float projDamage = 30;
     float currentProjTimer;
 
     Rigidbody2D rb;
+    private void Awake()
+    {
+        HP = maxHP;
+    }
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        HP = maxHP;
     }
 
     private void Update()
@@ -34,8 +37,8 @@ public class EnemyProjectile : MonoBehaviour
             {
                 GameObject ballObj = ObjectPool_EP.GetInstance().GetPooledObject();
                 EnemyBullet enemyBullet = ballObj.GetComponent<EnemyBullet>();
-                Vector2 vecToPlayer = Vector2.MoveTowards(transform.position, playerInstance.transform.position, 0f);
-                enemyBullet.SetVectorToPlayer(vecToPlayer);
+                Vector2 vecToPlayer = playerInstance.transform.position - transform.position;
+                enemyBullet.SetVectorToPlayer(vecToPlayer.normalized);
 
                 ballObj.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
                 ballObj.SetActive(true);

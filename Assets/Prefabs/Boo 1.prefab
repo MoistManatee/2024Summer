@@ -204,11 +204,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movespeed: 1.5
-  playerInstance: {fileID: 5098747125529951706, guid: f0f5aacae14a1564495d12a32532f9a1, type: 3}
   XP_Crystal: {fileID: 7268727769710105934, guid: 4a9d76413c31f9645b4670b1c00011bd, type: 3}
-  maxHP: 300
+  maxHP: 150
   HP: 0
   damage: 80
   projTimer: 5
   projCount: 1
-  projDamage: 80
