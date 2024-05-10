@@ -15,7 +15,6 @@ public class ProjectileEnemy : MonoBehaviour
 
     [SerializeField] float projTimer = 3;
     [SerializeField] int projCount = 1;
-    //[SerializeField] float projDamage = 30;
     float currentProjTimer;
 
     Rigidbody2D rb;

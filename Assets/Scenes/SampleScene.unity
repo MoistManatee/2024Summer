@@ -223,7 +223,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!1 &56808904
 GameObject:
@@ -1918,7 +1918,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -2428,7 +2428,7 @@ PrefabInstance:
       objectReference: {fileID: 56808906}
     - target: {fileID: 2676672582435419547, guid: f0f5aacae14a1564495d12a32532f9a1, type: 3}
       propertyPath: movespeed
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 2676672582435419547, guid: f0f5aacae14a1564495d12a32532f9a1, type: 3}
       propertyPath: scythePrefab

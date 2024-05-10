@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 2982828114279052753}
   - component: {fileID: -812310422296953813}
   m_Layer: 0
-  m_Name: Boo 1
+  m_Name: Big Boo
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

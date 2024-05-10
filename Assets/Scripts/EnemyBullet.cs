@@ -13,7 +13,6 @@ public class EnemyBullet : MonoBehaviour, IPoolable
         direction = PlayerVector;
     }
 
-
     public void Reset()
     {
         lifetime = 5f;
@@ -31,6 +30,7 @@ public class EnemyBullet : MonoBehaviour, IPoolable
         {
             gameObject.SetActive(false);
         }
-        transform.position += direction * 2f * Time.deltaTime;
+        transform.position += direction * 4f * Time.deltaTime;
+        transform.Rotate(new Vector3(0, 0, 120f) * Time.deltaTime);
     }
 }
