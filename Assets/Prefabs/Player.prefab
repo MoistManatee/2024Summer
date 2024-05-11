@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2676672582435419547}
   - component: {fileID: 8326034596943048485}
   - component: {fileID: 4958653210998534718}
+  - component: {fileID: 4824075954890078118}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -47,11 +48,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee20436dd9a86f4c90db535d8b560d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverComponent: {fileID: 0}
+  playerUIComponent: {fileID: 0}
+  enemySpawnerComponent1: {fileID: 0}
+  enemySpawnerComponent2: {fileID: 0}
+  rangedEnemySpawnerComponent: {fileID: 0}
   movespeed: 2.5
   scythePrefab: {fileID: 6447488944136728152, guid: db0ff4afef33d244ebb70f4fea94ca17, type: 3}
   scytheTimer: 2
+  scytheCount: 3
+  scytheDamage: 30
   xpSlider: {fileID: 0}
+  hpSlider: {fileID: 0}
   levelText: {fileID: 0}
+  maxHP: 100
+  hp: 0
 --- !u!50 &8326034596943048485
 Rigidbody2D:
   serializedVersion: 4
@@ -114,16 +125,37 @@ BoxCollider2D:
   m_Offset: {x: 0.004179001, y: 0.000000029802322}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.5, y: 1.09375}
+    newSize: {x: 0.5, y: 1.09375}
+    adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 0.54031384, y: 1.1002953}
   m_EdgeRadius: 0
+--- !u!95 &4824075954890078118
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5098747125529951706}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f8d4c517821619446bf52cc3881399f9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6257628593396548597
 GameObject:
   m_ObjectHideFlags: 0

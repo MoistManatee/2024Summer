@@ -40,6 +40,8 @@ public class Player : MonoBehaviour, ISubject
     int currentXP = 0;
     int maxXp = 100;
     int currentLevel = 1;
+
+
     private void Awake()
     {
         instance = this;
@@ -49,6 +51,7 @@ public class Player : MonoBehaviour, ISubject
         Attach(enemySpawnerComponent1);
         Attach(enemySpawnerComponent2);
         Attach(rangedEnemySpawnerComponent);
+
     }
 
     [SerializeField] private List<IObserver> _observers = new List<IObserver>();
@@ -158,7 +161,7 @@ public class Player : MonoBehaviour, ISubject
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
         rb.velocity = new Vector2(x, y) * movespeed;
-        //animator.SetFloat("Speed", rb.velocity.magnitude);
+        animator.SetFloat("Speed", rb.velocity.magnitude);
 
         if (x != 0)
         {
